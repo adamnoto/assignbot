@@ -1,14 +1,14 @@
-require "assignbot/version"
-require "assignbot/core"
+require 'assignbot/version'
+require 'assignbot/core'
 
-require "assignbot/dsl/assigner_dsl"
+require 'assignbot/dsl/assigner_dsl'
 
-require "assignbot/exceptions/unmasked_error"
-require "assignbot/exceptions/dsl_error"
+require 'assignbot/exceptions/unmasked_error'
+require 'assignbot/exceptions/dsl_error'
 
-require "assignbot/foundations/assignable"
-require "assignbot/foundations/assigner"
-require "assignbot/foundations/variable"
+require 'assignbot/foundations/assignable'
+require 'assignbot/foundations/assigner'
+require 'assignbot/foundations/variable'
 
 module Assignbot
   def self.included(base)
@@ -19,16 +19,17 @@ module Assignbot
     assignable = Assignbot::Core.get_assignable(self.class)
     assigner = assignable.get_assigner(assigner_name)
     fail AssigningError, "Undefined assigner scope: #{assigner_name}" unless assigner_name.to_sym == :default
-    
+
     if assigner && assigner.variables.any?
       # use explicitly from defined variables
-      assigner.variables.each do |target_variable, variable_ic|
-        value = hash[variable_ic.source_variable.to_s] || hash[variable_ic.source_variable.to_sym]
-        self.send(variable_ic.receptor, value)
+      assigner.variables.each do |_, variable_ic|
+        source_variable = variable_ic.source_variable
+        value = hash[source_variable.to_s] || hash[source_variable.to_sym]
+        send(variable_ic.receptor, value)
       end
     else
-      hash.each do |target_variable, value| 
-        self.send(:"#{target_variable}=", value)
+      hash.each do |target_variable, value|
+        send(:"#{target_variable}=", value)
       end
     end
   end
@@ -47,8 +48,11 @@ module Assignbot
     end
   end
 
+  # inner class that get extended to the base class
   module ClassDsl
+
     module_function
+
     def assigner(&block)
       assigner_dsl = AssignerDsl.new(self)
       assigner_dsl.instance_eval(&block)

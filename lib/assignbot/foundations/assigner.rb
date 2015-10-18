@@ -10,7 +10,9 @@ module Assignbot
     attr_reader :variables
 
     def self.canonify_name(name)
-      fail DslError, "Name must be either symbol or string, got: #{name}" unless name.is_a?(String) || name.is_a?(Symbol)
+      unless name.is_a?(String) || name.is_a?(Symbol)
+        fail DslError, "Name must be either symbol or string, got: #{name}" 
+      end
       name.to_s.downcase.tr(' ', '_').to_sym
     end
 

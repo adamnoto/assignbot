@@ -1,4 +1,5 @@
 module Assignbot
+  # DSL class that will be instantiated on call of "assigner"
   class AssignerDsl
     attr_reader :target_class
 
@@ -9,15 +10,15 @@ module Assignbot
     end
 
     def set(target_variable, source_variable, receptor)
-      @assignable_ic.add_variable(:default, 
-                                  target_variable, 
-                                  source_variable, 
+      @assignable_ic.add_variable(:default,
+                                  target_variable,
+                                  source_variable,
                                   receptor)
     end
 
-    def method_missing(name, *args, &block)
+    def method_missing(name, *args)
       params = args[0]
-      fail DslError, "Put in hash as an argument!" unless params.is_a?(Hash)
+      fail DslError, 'Put in hash as an argument!' unless params.is_a?(Hash)
       
       source_variable = params[:from] || params['from']
       set(name, source_variable, :"#{source_variable}=")

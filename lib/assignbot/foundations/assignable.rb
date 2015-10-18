@@ -22,9 +22,9 @@ module Assignbot
       assigner
     end
 
-    def add_variable(assigner_name = :default, 
-                     target_variable, 
-                     source_variable, 
+    def add_variable(assigner_name,
+                     target_variable,
+                     source_variable,
                      receptor)
 
       # create one instance of Assigner unless defined

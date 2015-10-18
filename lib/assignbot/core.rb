@@ -1,11 +1,12 @@
 module Assignbot
+  # Store Assignbot-wide static variables and functions
   module Core
     ASSIGNABLES = {}
 
-    extend self
+    module_function
 
     def get_assignable(target_class)
-      fail DslError, "Pass in class" unless target_class.is_a?(Class)
+      fail DslError, 'Pass in class' unless target_class.is_a?(Class)
       target_class_name = target_class.to_s
 
       asclass = ASSIGNABLES[target_class_name]
