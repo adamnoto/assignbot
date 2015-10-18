@@ -11,16 +11,30 @@ class User
   end
 end
 
+class Note
+  include Assignbot
+  
+  attr_accessor :userid, :title, :content
+end
+
 describe Assignbot do
   it 'has a version number' do
     expect(Assignbot::VERSION).not_to be nil
   end
 
-  let(:params) do
+  let(:user_params) do
     {
       name: "Adam Pahlevi",
       age: 23,
       id: "934-2311"
+    }
+  end
+
+  let(:note_params) do
+    {
+      userid: "934-2311",
+      title: "Howdy",
+      content: "Hello, World!"
     }
   end
 
@@ -61,27 +75,56 @@ describe Assignbot do
 
       context ".assign" do
         it "can get assigned by using hash" do
-          user.assign(params)
-          expect(user.id).to eq(params[:id])
+          user.assign(user_params)
+          expect(user.id).to eq(user_params[:id])
           expect(user.id).to eq("934-2311")
-          expect(user.age).to eq(params[:age])
+          expect(user.age).to eq(user_params[:age])
           expect(user.age).to eq(23)
-          expect(user.name).to eq(params[:name])
+          expect(user.name).to eq(user_params[:name])
           expect(user.name).to eq("Adam Pahlevi")
         end # it
       end # .assign
       
       context ".assign_default" do
         it "can get assigned by using hash" do
-          user.assign_default(params)
-          expect(user.id).to eq(params[:id])
+          user.assign_default(user_params)
+          expect(user.id).to eq(user_params[:id])
           expect(user.id).to eq("934-2311")
-          expect(user.age).to eq(params[:age])
+          expect(user.age).to eq(user_params[:age])
           expect(user.age).to eq(23)
-          expect(user.name).to eq(params[:name])
+          expect(user.name).to eq(user_params[:name])
           expect(user.name).to eq("Adam Pahlevi")
         end
       end
     end # User
+
+    # note is exceptional because it does not define
+    # the assigner explicitly
+    context "Note" do
+      let(:note) { Note.new }
+      before do
+        expect(note.userid).to be_nil
+        expect(note.title).to be_nil
+        expect(note.content).to be_nil
+      end
+
+      context ".assign" do
+        it "can get assigned by using hash" do
+          note.assign(note_params)
+          expect(note.userid).to eq("934-2311")
+          expect(note.title).to eq("Howdy")
+          expect(note.content).to eq("Hello, World!")
+        end
+      end # .assign
+
+      context ".assign_default" do
+        it "can get assigned by using hash" do
+          note.assign_default(note_params)
+          expect(note.userid).to eq("934-2311")
+          expect(note.title).to eq("Howdy")
+          expect(note.content).to eq("Hello, World!")
+        end
+      end
+    end
   end # context version 0.1.0
 end
