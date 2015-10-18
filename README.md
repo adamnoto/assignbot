@@ -1,12 +1,18 @@
 # Assignbot
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/assignbot`. To experiment with that code, run `bin/console` for an interactive prompt.
+In Ruby, assigning variables can be tricky. Could you assign from new? Could you always guarantee that? 
 
-TODO: Delete this and the text above, and describe your gem
+Assignbot guarantee you can assign from `.assign`, code changes to your codebase is not required
+unless you want custom behaviour.
+
+# Use cases
+
+1. Assign from the hash, from params
+2. Assign from the hash, from JSON
 
 ## Installation
 
-Add this line to your application's Gemfile:
+To install Assignbot, add this line to your Gemfile:
 
 ```ruby
 gem 'assignbot'
@@ -16,26 +22,62 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
+Or install it system-wide by issuing:
 
     $ gem install assignbot
 
 ## Usage
 
-TODO: Write usage instructions here
+Assume you have the following User class:
 
-## Development
+```ruby
+class User
+  attr_accessor :name, :age, :id
+end
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Basic usage of assigner does not require significant code change to your model/ruby class, other than a one-liner include statement:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+class User
+  include Assignbot
 
-## Contributing
+  # your other ruby code
+end
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/assignbot. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+By doing so, you already make User to be assignable from a Hash:
 
+```ruby
+user_params = {
+  name: "Adam Pahlevi",
+  age: 23,
+  id: "934-2311"
+}
+
+user = User.new
+user.assign(user_params)
+user.name == "Adam Pahlevi" # returns true
+```
+
+If you would like to explicitly tell Assignbot what are the assignable variables, then you have to define the variables explicitly:
+
+```ruby
+class User
+  include Assignbot
+
+  assigner do
+    name from: :name
+    age from: :age
+    id from: :id
+  end
+  # your other ruby code
+end
+```
+
+Explicitly defining assigner also allow you to map the value from source variable, which have different nomenclature, to the target variable in your Ruby class.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The gem is proudly available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
