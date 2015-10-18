@@ -18,9 +18,18 @@ module Assignbot
   def assignbot_assign(assigner_name, hash)
     assignable = Assignbot::Core.get_assignable(self.class)
     assigner = assignable.get_assigner(assigner_name)
-    assigner.variables.each do |target_variable, variable_ic|
-      value = hash[variable_ic.source_variable.to_s] || hash[variable_ic.source_variable.to_sym]
-      self.send(variable_ic.receptor, value)
+    fail AssigningError, "Undefined assigner scope: #{assigner_name}" unless assigner_name.to_sym == :default
+    
+    if assigner && assigner.variables.any?
+      # use explicitly from defined variables
+      assigner.variables.each do |target_variable, variable_ic|
+        value = hash[variable_ic.source_variable.to_s] || hash[variable_ic.source_variable.to_sym]
+        self.send(variable_ic.receptor, value)
+      end
+    else
+      hash.each do |target_variable, value| 
+        self.send(:"#{target_variable}=", value)
+      end
     end
   end
   private :assignbot_assign
