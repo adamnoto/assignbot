@@ -5,6 +5,8 @@ In Ruby, assigning variables can be tricky. Could you assign from new? Could you
 Assignbot guarantee you can assign from `.assign`, code changes to your codebase is not required
 unless you want custom behaviour.
 
+[ ![Codeship Status for saveav/assignbot](https://codeship.com/projects/78f58640-581d-0133-7dbd-1ebb29223a5a/status?branch=master)](https://codeship.com/projects/109613)
+
 # Use cases
 
 1. Assign from the hash, from params
