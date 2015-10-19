@@ -1,8 +1,10 @@
 # Assignbot
 
-In Ruby, assigning variables can be tricky. Could you assign from new? Could you always guarantee that? 
+In Ruby, `new` operator does not guarantee, for sure, that you can mass-assign instance variables.
+And when you want to do that, you should have known you should not writing the code by hand, over and over again.
 
-Assignbot guarantee you can assign from `.assign`, code changes to your codebase is not required
+Assignbot guarantee that you can mass-assign variables from `.assign`. Furthermore, 
+implementing Assignbot does not require massive code changes to your codebase,
 unless you want custom behaviour.
 
 [ ![Codeship Status for saveav/assignbot](https://codeship.com/projects/78f58640-581d-0133-7dbd-1ebb29223a5a/status?branch=master)](https://codeship.com/projects/109613)
